@@ -89,13 +89,12 @@ class SignInForm extends Component {
                                 Iniciar Sesión
                             </Button>
                         </FormItem>
-                        <div 
-                        className="accesoIncorrectoWrapper"
-                        style={{display: !accesoIncorrecto?'none':'block'}}
-                        >
-                            <span>Correo ó contraseña errada</span>
-                        </div>
-                        
+                    </div>
+                    <div 
+                    className="accesoIncorrectoWrapper"
+                    style={{display: !accesoIncorrecto?'none':'block'}}
+                    >
+                        <span>Correo ó contraseña errada</span>
                     </div>
                 </Form>
             </div>

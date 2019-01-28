@@ -2,11 +2,12 @@ import React, { Component } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import authAction from '../../redux/auth/actions';
-import IntlMessages from '../../components/utility/intlMessages';
+import Signup from './signup/signup';
+import Modal from '../../components/modal/modal';
 import SignInForm from './signinForm';
 import SignInStyleWrapper from './signin.style';
 import { request } from '../../settings/index';
-import { addToken, getToken, addCurrentPage } from '../../helpers/utility';
+import { addToken, addCurrentPage } from '../../helpers/utility';
 import message from "../../components/feedback/message";
 import MessageContent from "../../components/feedback/messageContent.style";
 
@@ -19,9 +20,11 @@ class SignIn extends Component {
       redirectToReferrer: false,
       accesoIncorrecto: false,
       loading: false,
+      loadingRegistrar: false,
       showRegistrar: false,
       inputCorreo: null,
       inputPassword: null,
+      closingRegistrar: false,
     };
   }
   
@@ -100,8 +103,39 @@ class SignIn extends Component {
     
   }
 
+  handleSignUp = (user) => {
+    this.setState({loadingRegistrar: true});
+    request.post('register', user)
+      .then(response => {
+        this.success('Te haz registrado con exito');
+        this.setState({
+          loadingRegistrar: false,
+          showRegistrar: false,
+        });
+      })
+      .catch(error => {
+        this.setState({
+          loadingRegistrar: false,
+          showRegistrar: false,
+        });
+        this.error();
+      });
+  }
+
   showRegistrar = () => {
     this.setState((state) => ({ showRegistrar: !state.showRegistrar }));
+  }
+
+  closeRegistrar = () => {
+    this.setState({
+      showRegistrar: false,
+      closingRegistrar: true,
+    });
+    setTimeout(() => {
+      this.setState({ 
+        closingRegistrar: false,
+      });
+    }, 500);
   }
 
   render() {
@@ -110,6 +144,7 @@ class SignIn extends Component {
       redirectToReferrer,
       accesoIncorrecto,
       loading,
+      loadingRegistrar,
     } = this.state;
 
     if (redirectToReferrer) {
@@ -121,10 +156,22 @@ class SignIn extends Component {
           <div className="isoLoginContent">
             <div className="isoLogoWrapper">
               <Link to="/dashboard">
-                <IntlMessages id="page.signInTitle" />
+                RED SOCIAL
               </Link>
             </div>
-
+            {
+              (this.state.showRegistrar || this.state.closingRegistrar) &&
+              <Modal
+              visible={this.state.showRegistrar}
+              onCancel={this.closeRegistrar}
+              footer={null}
+              >
+                <Signup 
+                handle={this.handleSignUp}
+                loading={loadingRegistrar}
+                />
+              </Modal>
+            }
             <div className="isoSignInForm">
               <SignInForm 
               handleLogin={this.handleLogin}

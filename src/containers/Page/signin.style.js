@@ -205,10 +205,16 @@ const SignInStyleWrapper = styled.div`
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    
+
     .ant-form-item {
       margin-bottom: 0px;
     }
+  }
+
+  .accesoIncorrectoWrapper {
+    text-align: center;
+    margin-top: 5px;
+    color: red;
   }
 `;
 
